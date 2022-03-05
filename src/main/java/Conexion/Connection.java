@@ -121,6 +121,7 @@ public class Connection {
                     // cuenta creada
 
                     accountFromClient.setId_usuario(userFromClient);
+             
                     accountFromClient = CuentaDAO.anadir(accountFromClient);
                     System.out.println("CUANTA CREADA");                   
                     System.out.println("CUANTA AÑADIDA");
@@ -143,7 +144,7 @@ public class Connection {
                     System.out.println("Cuenta enviada" + accountFromClient);
 
                     // paquete actualizado
-                    newPaquete = new PaqueteEnv(6, accountFromClient, true);
+                    newPaquete = new PaqueteEnv(6,accountFromClient, true);
                     sendDataToClient(cliente, newPaquete);
 
                     break;
@@ -160,7 +161,7 @@ public class Connection {
                     System.out.println("Cuenta enviada" + accountFromClient);
 
                     // paquete actualizado
-                    newPaquete = new PaqueteEnv(6, accountFromClient, true);
+                    newPaquete = new PaqueteEnv(6,accountFromClient, true);
                     sendDataToClient(cliente, newPaquete);
 
                     break;
@@ -183,8 +184,8 @@ public class Connection {
                     break;
             }
         }catch (IOException | ClassNotFoundException e){
-            if(e instanceof EOFException o){
-                throw new SocketException(o.getMessage());
+            if(e instanceof EOFException ){
+                throw new SocketException(e.getMessage());
             }else if(e instanceof ClassNotFoundException){
                 throw new SocketException("Clase no encontrada");
             }else{
