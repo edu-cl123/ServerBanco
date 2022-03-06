@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CuentaDAO extends Cuenta {
@@ -29,6 +30,7 @@ public class CuentaDAO extends Cuenta {
 
     private final static String CUENTA_X_ID = "SELECT * FROM cuenta WHERE id=?";
     private final static String CUENTA_X_ID_USER = "SELECT * FROM cuenta WHERE usuario_id=?";
+    private final static String LISTAR_TODOS = "SELECT * FROM cuenta";
 
     Connection con;
 
@@ -41,6 +43,34 @@ public class CuentaDAO extends Cuenta {
         super(saldo, id_usuario, lista_Transacciones);
 
     }
+    
+    public synchronized static List<Cuenta> ListarTodos() {
+        List<Cuenta> result = new ArrayList<Cuenta>();
+        Connection con = Conexion.getConexion(UtilidadXml.loadFile("conexion.xml"));
+        if (con != null) {
+
+            try {
+                PreparedStatement q = con.prepareStatement(LISTAR_TODOS);
+                ResultSet rs = q.executeQuery();
+                while (rs.next()) {
+                    Cuenta cl = new Cuenta();
+                    cl.setId(rs.getInt("id"));
+                    cl.setSaldo(rs.getFloat("saldo"));
+                    cl.setId_usuario(UsuarioDAO.getUsuarioPorId_card(rs.getString("usuario_id")));
+                    result.add(cl);
+
+                }
+                rs.close();
+                q.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+        return result;
+    }
+
 
     /*
      * AÑADIR UN USUARIO
